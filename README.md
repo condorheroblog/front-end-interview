@@ -4,7 +4,7 @@
 
 ## CSS 篇
 
-- [margin 塌陷](./src/css/margin-collapsing)
+- [margin 塌陷](./src/css/margin-collapsing.md)
 - [如何让一个盒子水平垂直居中](./src/css/horizontal-vertical-center.md)
 - [块级格式化上下文](./src/css/block-formatting-context.md)
 
@@ -17,4 +17,5 @@
 - [常用的四种前端登陆鉴权方案](./src/js/login-authentication.md)
 - [从URL输入到页面展现到底发生什么？](./src/js/browser-link-server.md)
 - [JavaScript 常见的六种继承方式](./src/js/javascript-extend.md)
+- [cookieStore](./src/js/cookieStore.md)
 
