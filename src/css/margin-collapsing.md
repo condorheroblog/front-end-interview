@@ -1,6 +1,6 @@
 # margin-collapsing
 
-> margin-collapsing 我们中文一般称为 「margin 塌陷」或叫 「margin 重叠」。
+> margin-collapsing 我们中文一般称为 「margin 塌陷」 或叫 「margin 重叠」 或叫 「margin穿透」。
 
 ### 可视尺寸 与 占据尺寸
 
@@ -11,11 +11,11 @@
 
 ### margin 如何影响可视尺寸与占据尺寸
 
-1. 对可视尺寸来讲（只影响可视尺寸的width，可用于「一侧定宽的两栏的布局」）
+1. 对可视尺寸来讲（只影响可视尺寸的width，可用于**一栏定宽一栏自适应的两栏的布局**）
     - 垂直方向上永远影响不了
     - 块级元素水平方向未设置宽度时，margin 为正，可视尺寸缩小，margin 为负，可视尺寸扩大。
 
-我曾经遇到有的人做**两端对齐 **给盒子扩展 1px 这么写过：`width： calc(100% + 1px)`，完全没必要直接 `margin-right/margin-left: -1px;` 即可解决。
+我曾经遇到有的人做**两端对齐布局**，给盒子扩展 1px 这么写过：`width： calc(100% + 1px)`，完全没必要直接 `margin-right/margin-left: -1px;` 即可解决。
 
 2. 对占据尺寸来讲（只影响占据尺寸的margin，可用于「等高布局 margin-bottom: -100%;padding-bottom: 100%;」）
     - 对 block 元素来讲影响任何方向
@@ -30,7 +30,7 @@ margin 垂直方向的百分比和水平方向的百分比都是参考容器的�
 - 绝对定位的元素参考第一个定位（fixed、relative、absolute）的祖先级元素的宽度
 
 利用 margin 百分比和 margin collapseing 这些特性可以做一些布局的效果，例如：
-宽高 2:1 自适应的矩形：
+- 宽高 2:1 自适应的矩形：
 
 ```html
 <!DOCTYPE html>
@@ -58,7 +58,7 @@ margin 垂直方向的百分比和水平方向的百分比都是参考容器的�
 </html>
 ```
 
-宽高 1:1 自适应的矩形：
+- 宽高 1:1 自适应的矩形：
 
 ```html
 <!DOCTYPE html>

@@ -7,6 +7,7 @@
 - [margin 塌陷](./src/css/margin-collapsing.md)
 - [如何让一个盒子水平垂直居中](./src/css/horizontal-vertical-center.md)
 - [块级格式化上下文](./src/css/block-formatting-context.md)
+- [dislpay、visibility、opacity 的区别](./src/css/dislpay-visibility-opacity.md)
 
 ## HTML 篇
 ## JS 篇
@@ -18,4 +19,3 @@
 - [从URL输入到页面展现到底发生什么？](./src/js/browser-link-server.md)
 - [JavaScript 常见的六种继承方式](./src/js/javascript-extend.md)
 - [cookieStore](./src/js/cookieStore.md)
-
