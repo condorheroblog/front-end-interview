@@ -1,4 +1,4 @@
-决定。（完整的说法是：# 块级格式化上下文 BFC
+# 块级格式化上下文 BFC
 
 Block Formatting Context 中文称为 **块级格式化上下文/块格式化上下文**，但是作为前端你应该知道 CSS 中不止一种 FC，还有 IFC、GFC、FFC，其中 BFC 和 IFC 是属于 CSS2.1 的内容， GFC 和 FFC 是属于 CSS3 的内容，一起来学习下，先从 FC 说起。
 
@@ -25,7 +25,7 @@ FC（Formatting Context）格式化上下文：
 
 > 请问一个 block 元素默认是 BFC 吗？why?
 
-这个问题我思考了，好久可以明确靠诉你不是，原因是 MDN 上讲 BFC 的创建，其中有一条是：
+这个问题我思考了好久，可以明确靠诉你，**block 元素默认不是 BFC**，原因是 MDN 上讲 BFC 的创建，其中有一条是：
 
 > Block elements where overflow has a value other than visible and clip.（块级元素的overflow的值不能为 visible/clip时才会创建 BFC）
 
@@ -50,7 +50,7 @@ FC（Formatting Context）格式化上下文：
 2. 网格元素（display 为 grid 或 inline-grid 元素的直接子元素）
 3. 多列容器（元素的 column-count 或 column-width 不为 auto，包括 column-count 为 1）
 
-这个布局盒子，到底属不属于 BFC 呢，MDN 写的是属于的。
+这三个布局相关的盒子，到底属不属于 BFC 呢，MDN 写的是属于的，姑且可以认为 GFC 和 FFC 属于 BFC 的子集。
 
 BFC 的约束规则：
 
@@ -63,43 +63,45 @@ BFC 的约束规则：
 
 BFC 的应用：
 
-1. 防止 margin 发生重叠。
-2. 防止发生因浮动导致的**高度塌陷**。
-3. 两栏自适应布局。
+1. 防止 margin 发生重叠，两端对齐。（BFC 的封闭性）
+2. 防止发生因浮动导致的**高度塌陷**（计算 BFC 的高度时，浮动子元素也参与计算）。
+3. 两栏自适应布局（BFC 的区域不会与 float 的元素区域重叠）。
 
 此处要讲下两栏自适应布局的历史，不过首先有请重磅人物出场：overflow。
 
 ### 两栏自适应布局 和 overflow 介绍
 
-overflow 的基本属性：
+overflow 的值可以为：
 
-1. visible
-2. hidden
-3. scroll
-4. auto
-5. inherit
+1. visible（一般盒子的默认值，元素超出盒子依然坚挺的显示）
+2. hidden（溢出隐藏）
+3. scroll（不管溢不溢出，滚动条常在）
+4. auto（溢出时，自动出现滚动条）
+5. inherit（继承，不用多讲）
 
 关于 overflow-x 和 overflow-y ：
 
 - 如果 overflow-x 和 overflow-y 值相同，就等于 overflow
-- 如果 overflow-x 和 overflow-y 值不同，且有一个值为 visible ，另设置除 visible 以外的（auto/hidden/scroll）值，则 visible 强制重置为 auto。
+- 如果 overflow-x 和 overflow-y 值不相同时，且有一个属性值为 visible ，另一个属性值设置除 visible 以外的（auto/hidden/scroll）值，则为属性值 visible 的会被强制重置为 auto。
 
-浏览器滚动条：
+关于浏览器滚动条：
 
 出现滚动条的条件是 `overflow: srcoll/auto;`，其中 **html 和 textarea 标签 overflow 默认为 auto，其他元素的 overflow 则为 visible。**
 
-记住无论什么浏览器，默认的滚动条都来自 **html 标签，而不是 body 标签**。如何证明：
+> 问：默认浏览器的滚动条是在 html 标签上还是 body 标签上？
+> 答：记住无论什么浏览器，默认的滚动条都来自 **html 标签，而不是 body 标签**。如何证明：
+> 默认情况下 body 标签有 8 像素的 margin，如果滚动条来自 body，因为滚动条属于宽度的一部分，滚动条距离浏览器边框应该是有 8px 的距离，真实观察未产生距离，所以滚动条来自 html 元素无疑。
 
-默认情况下 body 标签有 8 像素的 margin，如果滚动条来自 body，因为滚动条属于宽度的一部分，滚动条距离浏览器边框应该是有 8px 的距离，真实观察未产生距离，所以滚动条来自 html 元素无疑。
-
-解决出现滚动条，水平居中布局跳动的问题：
+经典问题，如何解决水平居中出现滚动条造成的跳动的问题：
 
 1. overflow-y: scroll;
 2. padding-left: calc(100vw - 100%);
 
-重头戏，两栏自适应布局，我们一般来讲是通过 position 和 float 来做，两者之中又以 float 较为常用。我们就以 float 为演示，然后分为两类：
+接下来重头戏，两栏自适应布局，我们一般来讲是**通过 position 和 float 来做**，相对 position 来讲 float 更加较为常用。我们就以 float 为演示，然后又分为两类：
 
 1. 流体自适应布局
+
+这个简单易懂了：
 
 ```html
 <!DOCTYPE html>
@@ -139,7 +141,7 @@ overflow 的基本属性：
 
 ![流体两栏自适应布局.png](./img/block-formatting-context/流体两栏自适应布局.png)
 
-我们给 main 标签添加 `clear: both;` 清除浮动：
+当我们给 main 标签添加 `clear: both;` 清除浮动：
 
 ```css
 main::before {
@@ -152,11 +154,13 @@ main::before {
 内容折行了：
 ![clear-both](./img/block-formatting-context/clear-both.png)
 
-缺点：
+流体自适应布局的缺点：
     1. 设置 `clear: both;` 会折行显示
-    2. 两栏之间的间隙，需要计算，不能根据左侧的一栏自己计算
+    2. 两栏之间的间隙，需要根据左侧的一栏宽度自己计算。
 
-2. BFC 两栏自适应布局，可以避免 `clear: both` 的影响，利用 BFC 的区域不会与 float 的元素区域重叠。
+2. BFC 两栏自适应布局
+
+BFC 两栏自适应布局，可以避免 `clear: both` 的影响，利用的是 BFC 的区域不会与 float 的元素区域重叠。
 
 ```html
 <!DOCTYPE html>
@@ -251,35 +255,36 @@ main::before {
 </html>
 ```
 
-参考链接：[CSS深入理解流体特性和BFC特性下多栏自适应布局](https://www.zhangxinxu.com/wordpress/2015/02/css-deep-understand-flow-bfc-column-two-auto-layout/)
+参考链接：张鑫旭的 [CSS深入理解流体特性和BFC特性下多栏自适应布局](https://www.zhangxinxu.com/wordpress/2015/02/css-deep-understand-flow-bfc-column-two-auto-layout/)
+
+设置 `display: table-cell;` 之后，宽度现在最好给值大于 100vw 就行了，没必要 9999px 这样。
+
+> 行文至此，接下去研究 IFC/FFC/GFC 的时候遇见瓶颈了，有些概念术语不是很懂，所以跑去补充下 CSS 中的术语 [一些搞不清楚的 CSS 术语](./some-of-css-terms.md)
 
 ### IFC
 
-IFC(Inline Formatting Context)直译为"行内格式化上下文"，IFC 的 line box （线框）高度由其包含行内元素中最高的实际高度计算而来（不受到竖直方向的  padding/margin 影响)
+IFC(Inline Formatting Context) 直译为 **行内/内联格式化上下文**，IFC 的 line box （线框）高度由其包含行内元素中最高的实际高度计算而来（不受到竖直方向的 padding/margin 影响)。
 
-#### IFC有的特性
+#### IFC 特有的特性
 
-IFC 中的 line box一般左右都贴紧整个 IFC</code>，但是会因为<code>float</code>元素而扰乱。<code>float</code>元素会位于<code>IFC</code>与与<code>line box</code>之间，使得<code>line box</code>宽度缩短。</li>
-<li>
-<code>IFC</code>中时不可能有块级元素的，当插入块级元素时（如<code>p</code>中插入<code>div</code>）会产生两个匿名块与<code>div</code>分隔开，即产生两个<code>IFC</code>，每个<code>IFC</code>对外表现为块级元素，与<code>div</code>垂直排列。</li>
+IFC 中的 line box 一般左右都贴紧整个 IFC，但是会因为 float 元素而扰乱。float 元素会位于 IFC 与 line box 之间，使得 line box 宽度缩短。
+
+IFC 中是不可能有块级元素的，当插入块级元素时（如 p 中插入 div）会产生两个匿名块与 div 分隔开，即产生两个 IFC，每个 IFC 对外表现为块级元素，与 div 垂直排列。
+
+在行内格式化上下文中，框(boxes)一个接一个地水平排列，起点是包含块的顶部。水平方向上的 margin，border 和 padding在框之间得到保留。框在垂直方向上可以以不同的方式对齐：它们的顶部或底部对齐，或根据其中文字的基线对齐。包含那些框的长方形区域，会形成一行，叫做行框。
 
 #### IFC的应用
 
-<li>水平居中：当一个块要在环境中水平居中时，设置其为<code>inline-block</code>则会在外层产生<code>IFC</code>，通过<code>text-align</code>则可以使其水平居中。</li>
-<li>垂直居中：创建一个<code>IFC</code>，用其中一个元素撑开父元素的高度，然后设置其<code>vertical-align:middle</code>，其他行内元素则可以在此父元素下垂直居中。</li>
+水平居中：当一个块要在环境中水平居中时，设置其为 inline-block 则会在外层产生 IFC ，通过 text-align 则可以使其水平居中。
+垂直居中：创建一个 IFC ，用其中一个元素撑开父元素的高度，然后设置其 vertical-align:middle ，其他行内元素则可以在此父元素下垂直居中。
 
 ### FFC
 
-FFC(Flex Formatting Contexts)直译为"自适应格式化上下文"，display值为flex或者inline-flex的元素将会生成自适应容器（flex container）
+FFC(Flex Formatting Contexts) 直译为 **自适应格式化上下**，display 值为 flex 或者 inline-flex 的元素将会生成自适应容器（flex container）。
 
 ### GFC
 
-GFC(GridLayout Formatting Contexts)直译为"网格布局格式化上下文"，当为一个元素设置display值为grid的时候，此元素将会获得一个独立的渲染区域，我们可以通过在网格容器（grid container）上定义网格定义行（grid definition rows）和网格定义列（grid definition columns）属性各在网格项目（grid item）上定义网格行（grid row）和网格列（grid columns）为每一个网格项目（grid item）定义位置和空间。
+GFC(GridLayout Formatting Contexts) 直译为 **网格布局格式化上下文**，当为一个元素设置display值为grid的时候，此元素将会获得一个独立的渲染区域，我们可以通过在网格容器（grid container）上定义网格定义行（grid definition rows）和网格定义列（grid definition columns）属性各在网格项目（grid item）上定义网格行（grid row）和网格列（grid columns）为每一个网格项目（grid item）定义位置和空间。
 那么GFC有什么用呢，和table又有什么区别呢？首先同样是一个二维的表格，但GridLayout会有更加丰富的属性来控制行列，控制对齐以及更为精细的渲染语义和控制。
 
 一维布局变成了二维布局
-
-
-
-
-
