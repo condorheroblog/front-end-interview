@@ -255,6 +255,8 @@ BFC 两栏自适应布局，可以避免 `clear: both` 的影响，利用的是 
 </html>
 ```
 
+**注意⚠️：**[columns 分栏布局/多栏布局](https://www.zhangxinxu.com/wordpress/2019/01/css-css3-columns-layout/#columns) 也属于 BFC。
+
 参考链接：张鑫旭的 [CSS深入理解流体特性和BFC特性下多栏自适应布局](https://www.zhangxinxu.com/wordpress/2015/02/css-deep-understand-flow-bfc-column-two-auto-layout/)
 
 设置 `display: table-cell;` 之后，宽度现在最好给值大于 100vw 就行了，没必要 9999px 这样。
@@ -265,26 +267,49 @@ BFC 两栏自适应布局，可以避免 `clear: both` 的影响，利用的是 
 
 IFC(Inline Formatting Context) 直译为 **行内/内联格式化上下文**，IFC 的 line box （线框）高度由其包含行内元素中最高的实际高度计算而来（不受到竖直方向的 padding/margin 影响)。
 
-#### IFC 特有的特性
+> BFC 应用价值比较高，面试也常问，所以大家比较了解，但是你有没有想过生成 BFC 需要一定的条件，那么生成 IFC 是否需要呢？或者说如何生成 IFC？
 
-IFC 中的 line box 一般左右都贴紧整个 IFC，但是会因为 float 元素而扰乱。float 元素会位于 IFC 与 line box 之间，使得 line box 宽度缩短。
+我翻便 W3C [inline-formatting](https://www.w3.org/TR/CSS2/visuren.html#inline-formatting) 和 MDN [Inline_formatting_context](https://developer.mozilla.org/zh-CN/docs/Web/CSS/Inline_formatting_context) 都没看到具体写如何生成 IFC 的方法，先看 IFC 的特性，我们再来看这个问题。
 
-IFC 中是不可能有块级元素的，当插入块级元素时（如 p 中插入 div）会产生两个匿名块与 div 分隔开，即产生两个 IFC，每个 IFC 对外表现为块级元素，与 div 垂直排列。
+#### IFC 特性
 
-在行内格式化上下文中，框(boxes)一个接一个地水平排列，起点是包含块的顶部。水平方向上的 margin，border 和 padding在框之间得到保留。框在垂直方向上可以以不同的方式对齐：它们的顶部或底部对齐，或根据其中文字的基线对齐。包含那些框的长方形区域，会形成一行，叫做行框。
+W3C [inline-formatting](https://www.w3.org/TR/CSS2/visuren.html#inline-formatting) 对 IFC 的描述如下：
 
-#### IFC的应用
+> In an inline formatting context, boxes are laid out horizontally, one after the other, beginning at the top of a containing block. Horizontal margins, borders, and padding are respected between these boxes. The boxes may be aligned vertically in different ways: their bottoms or tops may be aligned, or the baselines of text within them may be aligned.
 
+翻译一下 IFC 有三个特点：
+
+1. 在行内格式化上下文中，框(boxes)一个接一个地水平排列，起点是包含块的顶部。
+2. 盒子水平方向上的 margin，border 和 padding 有效。
+3. 盒子在垂直方向上可以以不同的方式对齐：它们的顶部或底部对齐，或根据其中文字的基线对齐。
+
+除了上面 IFC 还有以下特点：
+
+- 能把同在一行上的框都完全包含进去的一个矩形区域，被称为该行的**行框（line box）**。
+- 行框的宽度是由包含块（containing box）和与其中的浮动来决定。
+- IFC 中的 line box 一般左右边贴紧其包含块，但 float 元素会优先排列，即浮动元素会改变 line box  的宽度。
+- IFC 中的 line box 高度由 CSS 行高计算规则来确定，同一个 IFC 下的多个 line box 高度可能会不同。
+- 当 inline-level boxes 的总宽度少于包含它们的 line box 时，其水平渲染规则由 text-align 属性值来决定。
+- 当一个 inline box 超过父元素的宽度时，它会被分割成多个 boxes，这些 boxes 分布在多个 line box 中。如果子元素未设置强制换行的情况下，inline box 将不可被分割，将会溢出父元素。
+
+#### IFC 的应用
+
+图文跟随：结合浮动元素做图文跟随。
 水平居中：当一个块要在环境中水平居中时，设置其为 inline-block 则会在外层产生 IFC ，通过 text-align 则可以使其水平居中。
 垂直居中：创建一个 IFC ，用其中一个元素撑开父元素的高度，然后设置其 vertical-align:middle ，其他行内元素则可以在此父元素下垂直居中。
 
 ### FFC
 
-FFC(Flex Formatting Contexts) 直译为 **自适应格式化上下**，display 值为 flex 或者 inline-flex 的元素将会生成自适应容器（flex container）。
+FFC(Flex Formatting Contexts) 直译为 **自适应格式化上下**。
+
+display 值为 flex 或者 inline-flex 会形成 FFC，只需要注意，设为 Flex 布局以后，子元素的 float、clear 和vertical-align 属性将失效。
+
+Flex 现在是应用最广的一种布局了，我认为阮老师的 [Flex 布局教程：语法篇](http://www.ruanyifeng.com/blog/2015/07/flex-grammar.html) 写的是最好的。
 
 ### GFC
 
-GFC(GridLayout Formatting Contexts) 直译为 **网格布局格式化上下文**，当为一个元素设置display值为grid的时候，此元素将会获得一个独立的渲染区域，我们可以通过在网格容器（grid container）上定义网格定义行（grid definition rows）和网格定义列（grid definition columns）属性各在网格项目（grid item）上定义网格行（grid row）和网格列（grid columns）为每一个网格项目（grid item）定义位置和空间。
-那么GFC有什么用呢，和table又有什么区别呢？首先同样是一个二维的表格，但GridLayout会有更加丰富的属性来控制行列，控制对齐以及更为精细的渲染语义和控制。
+GFC(GridLayout Formatting Contexts) 直译为 **网格布局格式化上下文**。
 
-一维布局变成了二维布局
+当为一个元素设置 display 值为 grid 的时候，会形成 GFC，需要注意的是，设为网格布局以后，容器子元素（项目）的float、display: inline-block、display: table-cell、vertical-align 和 column-* 等设置都将失效。。
+
+也是阮老师的文章 [CSS Grid 网格布局教程](http://www.ruanyifeng.com/blog/2019/03/grid-layout-tutorial.html) 工作中我实际用到了一次，体验不是很好，主要它是属性相比 flex 的属性太多难记，Grid 教程看好几次了，现在还是一脸蒙 B。
