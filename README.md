@@ -25,6 +25,8 @@
 - [JavaScript 常见的六种继承方式](./src/js/javascript-extend.md)
 - [cookieStore](./src/js/cookieStore.md)
 - [正则如何添加千位分隔符?](./src/js/thousand-mark.md)
+- [如何取消 Http 请求?](./src/js/cancel-http-request.md)
+- [前端性能优化?](./src/js/performance-optimization.md)
 
 ## 网络篇
 
@@ -37,3 +39,7 @@
 ## Vue 篇
 
 - [RFC](./src/vue/rfc.md)
+
+## 那些年我掌握的新规
+
+- [2020 我新掌握的前端技术](./src/latest-regulations/2020.md)
